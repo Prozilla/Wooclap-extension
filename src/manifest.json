@@ -1,0 +1,22 @@
+{
+	"manifest_version": 3,
+	"name": "Wooclap Extension",
+	"description": "Simple Wooclap Extension",
+	"version": "1.0",
+	"action": {
+		"default_popup": "popup/index.html",
+		"default_icon": "assets/icon.png"
+	},
+	"icons": {
+		"1000": "assets/icon.png"
+	},
+	"permissions": ["activeTab", "storage", "scripting"],
+	"commands": {
+		"_execute_action": {
+			"suggested_key": {
+				"default": "Ctrl+B",
+				"mac": "Command+B"
+			}
+		}
+	}
+}
