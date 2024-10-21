@@ -1,3 +1,8 @@
+/**
+ * Renders questions to HTML elements and adds them to the DOM element with id #questions,
+ * then triggers Katex to automatically render Katex expressions
+ * @param {*} questions 
+ */
 function showQuestions(questions) {
 	console.log(questions);
 
@@ -58,6 +63,10 @@ function showQuestions(questions) {
 	}
 }
 
+/**
+ * Fetches the Wooclap questionnaire for the current quiz on the host site
+ * @returns questions
+ */
 async function fetchQuestionnaire() {
 	const slug = location.pathname.split("/")[1];
 	const token = localStorage.getItem("token");
@@ -79,8 +88,8 @@ async function fetchQuestionnaire() {
 	return questions;
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-    try {
+async function activate() {
+	try {
         // Get the current tab
         const tabs = await browser.tabs.query({ active: true, currentWindow: true });
         const tab = tabs[0];
@@ -97,4 +106,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     catch(error) {
 		console.error(error);
     }
-});
+}
+
+document.addEventListener("DOMContentLoaded", activate);
