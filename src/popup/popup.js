@@ -1,16 +1,32 @@
+function showWarning(message, severity = 0) {
+	const container = document.getElementById("questions");
+
+	const warning = document.createElement("p");
+	warning.className = "warning";
+	warning.textContent = message;
+
+	if (severity > 0) {
+		warning.className += " error";
+	}
+
+	container.appendChild(warning);
+}
+
 /**
  * Renders questions to HTML elements and adds them to the DOM element with id #questions,
  * then triggers Katex to automatically render Katex expressions
  * @param {*} questions 
  */
 function showQuestions(questions) {
-	console.log(questions);
-
-	if (questions == null)
-		return;
+	console.info("Questions:", questions);
 
 	const container = document.getElementById("questions");
 	container.className = "questions";
+
+	if (questions == null) {
+		showWarning("No questions found :(");
+		return;
+	}
 
 	// Questions
 	questions.forEach(({ title, choices }) => {
@@ -78,7 +94,7 @@ function showQuestions(questions) {
  * @returns questions
  */
 async function fetchQuestionnaire() {
-	const slug = location.pathname.split("/")[1];
+	const slug = location.pathname.split("/")[1].replace(/\?.*/, "");
 	const token = localStorage.getItem("token");
 
 	const url = `https://app.wooclap.com/api/events/${slug.toUpperCase()}?isParticipant=true&from=`;
@@ -92,10 +108,10 @@ async function fetchQuestionnaire() {
 		return null;
 	});
 
-	console.info(result);
+	console.info("Result:", result);
 
 	if (result == null)
-		return;
+		return null;
 
 	let questions;
 
@@ -126,6 +142,7 @@ async function activate() {
     } 
     catch(error) {
 		console.error(error);
+		showWarning("Extension failed to activate", 1);
     }
 }
 
