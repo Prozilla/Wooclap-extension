@@ -6,42 +6,52 @@
 function showQuestions(questions) {
 	console.log(questions);
 
+	if (questions == null)
+		return;
+
 	const container = document.getElementById("questions");
 	container.className = "questions";
 
 	// Questions
 	questions.forEach(({ title, choices }) => {
+		if (title == null && choices == null)
+			return;
+
 		const questionContainer = document.createElement("div");
 		questionContainer.className = "question";
 
-		// Title
-		const questionTitle = document.createElement("h2");
-		questionTitle.className = "question-title";
-		title.split("\n").forEach((titlePart) => {
-			const line = document.createElement("p");
-			line.textContent = titlePart;
+		if (title != null) {
+			// Title
+			const questionTitle = document.createElement("h2");
+			questionTitle.className = "question-title";
+			title.split("\n").forEach((titlePart) => {
+				const line = document.createElement("p");
+				line.textContent = titlePart;
 
-			questionTitle.appendChild(line);
-		});
-		questionContainer.appendChild(questionTitle);
+				questionTitle.appendChild(line);
+			});
+			questionContainer.appendChild(questionTitle);
+		}
 
-		// Choices
-		const questionChoicesContainer = document.createElement("ol");
-		questionChoicesContainer.className = "question-choices";
-		choices.forEach(({ choice, isCorrect }) => {
-			const questionChoice = document.createElement("li");
-			questionChoice.className = "question-choice";
-			questionChoice.setAttribute("data-correct", isCorrect);
-			questionChoice.textContent = choice;
+		if (choices != null && choices.length > 0) {
+			// Choices
+			const questionChoicesContainer = document.createElement("ol");
+			questionChoicesContainer.className = "question-choices";
+			choices.forEach(({ choice, isCorrect }) => {
+				const questionChoice = document.createElement("li");
+				questionChoice.className = "question-choice";
+				questionChoice.setAttribute("data-correct", isCorrect);
+				questionChoice.textContent = choice;
 
-			// Icon
-			const questionChoiceIcon = document.createElement("i");
-			questionChoiceIcon.className = isCorrect ? "fa-solid fa-check" : "fa-solid fa-xmark";
-			questionChoice.appendChild(questionChoiceIcon);
+				// Icon
+				const questionChoiceIcon = document.createElement("i");
+				questionChoiceIcon.className = isCorrect ? "fa-solid fa-check" : "fa-solid fa-xmark";
+				questionChoice.appendChild(questionChoiceIcon);
 
-			questionChoicesContainer.appendChild(questionChoice);
-		});
-		questionContainer.appendChild(questionChoicesContainer);
+				questionChoicesContainer.appendChild(questionChoice);
+			});
+			questionContainer.appendChild(questionChoicesContainer);
+		}
 
 		container.appendChild(questionContainer);
 	});
@@ -82,9 +92,20 @@ async function fetchQuestionnaire() {
 		return null;
 	});
 
-	const questionnaire = result?.questionnaires[0];
-	const questions = questionnaire?.questions;
+	console.info(result);
 
+	if (result == null)
+		return;
+
+	let questions;
+
+	if (result.questionnaires.length > 0) {
+		const questionnaire = result?.questionnaires[0];
+		questions = questionnaire?.questions;
+	} else {
+		questions = result.questions;
+	}
+	
 	return questions;
 }
 
